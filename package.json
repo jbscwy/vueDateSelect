@@ -8,7 +8,10 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "prettier": "prettier --write .",
+    "lint": "eslint --ext .ts packages/*/**.ts",
+    "lint:fix": "eslint --ext .ts packages/*/**.ts --fix"
   },
   "dependencies": {
     "vue": "^3.4.29"

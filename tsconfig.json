@@ -1,11 +1,19 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.app.json"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es2016",
+    "sourceMap": false,
+    "module": "esnext",
+    "esModuleInterop": true,
+    "strict": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "lib": ["esnext", "dom"],
+    "types": ["node"],
+    "rootDir": ".",
+    "moduleResolution": "node",
+    "paths": {
+      "@*": ["packages/*"]
     }
-  ]
+  }
 }
