@@ -40,8 +40,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, computed, reactive, onBeforeUnmount } from 'vue'
+
+interface SelectedDate {
+  num: number
+  startTime: string
+  endTime: string
+}
+
 export default {
   name: 'DatePicker',
   setup() {
@@ -114,7 +121,7 @@ export default {
     }
 
     // 判断日期是否被选中
-    function isDateSelected(day) {
+    function isDateSelected(day: { date: Date }) {
       if (formatDate(day.date) === '') return false
       return (
         selectedDate.startTime === formatDate(day.date) ||
@@ -122,7 +129,7 @@ export default {
       )
     }
     //判断日期是否在中间
-    function isDateIn(day) {
+    function isDateIn(day: { date: Date }) {
       if (formatDate(day.date) === '' || compare(selectedDate.endTime, formatDate(day.date)) < 0)
         return false
       return (
@@ -132,7 +139,7 @@ export default {
     }
 
     // 判断日期是否被禁用
-    function isDateDisabled(day) {
+    function isDateDisabled(day: { date: Date }) {
       // 添加你自己的禁用日期的逻辑
       return false
     }
@@ -140,7 +147,7 @@ export default {
     //当选择的日期为0个时直接赋值给start；
     //当选择日期为1个时，比较大小，小的赋值给start,大的赋值给end；
     //当选择日期为2个时，依次比较大小，小于start更新start,大于start更新end
-    function selectDate(day) {
+    function selectDate(day: { date: Date }) {
       const n = selectedDate.num
       console.log(formatDate(day.date))
       if (n === 0) {
@@ -167,7 +174,7 @@ export default {
     }
 
     //比较两个日期大小
-    function compare(day1, day2) {
+    function compare(day1: string, day2: string) {
       if (!day1 && !day2) return 0
       if (!day1) return -1
       if (!day2) return 1
@@ -182,7 +189,7 @@ export default {
     }
 
     // 格式化日期为字符串
-    function formatDate(date) {
+    function formatDate(date: Date) {
       if (date) {
         const year = date.getFullYear()
         const month = (date.getMonth() + 1).toString().padStart(2, '0') // 月份需要加1，补齐两位数字
