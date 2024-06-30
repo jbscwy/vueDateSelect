@@ -2,6 +2,7 @@
   <header>
     <div class="datePicker">
       <!-- <Model /> -->
+      <h2>日志选择器</h2>
       <Datepicker />
     </div>
   </header>
@@ -13,7 +14,12 @@ import Datepicker from './components/datePicker/Datepicker.vue'
 </script>
 
 <style scoped>
+h2 {
+  align-self: center;
+}
+
 .datePicker {
   display: flex;
+  flex-direction: column;
 }
 </style>
