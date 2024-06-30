@@ -14,6 +14,11 @@
     "lint:fix": "eslint --ext .ts packages/*/**.ts --fix"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
+    "element-plus": "^2.7.6",
+    "unplugin-auto-import": "^0.17.6",
+    "unplugin-icons": "^0.19.0",
+    "unplugin-vue-components": "^0.27.2",
     "vue": "^3.4.29"
   },
   "devDependencies": {

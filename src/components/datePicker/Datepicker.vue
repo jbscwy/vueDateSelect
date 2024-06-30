@@ -1,48 +1,67 @@
 <template>
   <div class="my-date-picker">
-    <div class="my-date-picker-dropdown">
-      <div class="my-date-picker-calendar">
+    <el-card style="max-width: 480px">
+      <template #header>
         <div class="my-date-picker-header">
-          <button class="my-date-picker-prev" @click="prevMonth">&lt;</button>
+          <div>
+            <el-button class="button" type="" @click="prevYear">
+              <el-icon><DArrowLeft /></el-icon>
+            </el-button>
+            <el-button class="button" type="" @click="prevMonth">
+              <el-icon><ArrowLeft /></el-icon>
+            </el-button>
+          </div>
           <span class="my-date-picker-title">{{ currentMonth }}</span>
-          <button class="my-date-picker-next" @click="nextMonth">&gt;</button>
+          <div>
+            <el-button class="button" @click="nextMonth">
+              <el-icon><ArrowRight /></el-icon>
+            </el-button>
+            <el-button class="button" @click="nextYear">
+              <el-icon><DArrowRight /></el-icon>
+            </el-button>
+          </div>
         </div>
-        <table class="my-date-picker-days">
-          <thead>
-            <tr>
-              <th v-for="day in daysOfWeek" :key="day">{{ day }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="week in weeks" :key="week">
-              <td
-                v-for="day in week"
-                :key="day.date"
-                :class="{
-                  'my-date-picker-day': true,
-                  'my-date-picker-selected': isDateSelected(day),
-                  'my-date-picker-in': isDateIn(day),
-                  'my-date-picker-disabled': isDateDisabled(day)
-                }"
-                @click="selectDate(day)"
-              >
-                {{ day.day }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="time">
-        <h3>开始时间:{{ selectedDate.startTime }}</h3>
-        <h3>结束时间:{{ selectedDate.endTime }}</h3>
-      </div>
-    </div>
+      </template>
+      <table class="days-container">
+        <tr class="days-grid-tr">
+          <td class="days-td" v-for="day in daysOfWeek" :key="day">
+            <p class="day-content">{{ day }}</p>
+          </td>
+        </tr>
+        <tr class="days-grid-tr" v-for="week in weeks" :key="week">
+          <td
+            class="days-td"
+            v-for="day in week"
+            :key="day.date"
+            :class="{
+              'my-date-picker-day': true,
+              'my-date-picker-selected': isDateSelected(day),
+              'my-date-picker-in': isDateIn(day),
+              'my-date-picker-disabled': isDateDisabled(day)
+            }"
+            @click="selectDate(day)"
+          >
+            <p class="day-content">{{ day.day }}</p>
+          </td>
+        </tr>
+      </table>
+      <template #footer
+        ><div class="time">
+          <div>
+            <el-text class="text">开始时间：{{ selectedDate.startTime }}</el-text>
+          </div>
+          <div>
+            <el-text class="text">结束时间：{{ selectedDate.endTime }}</el-text>
+          </div>
+        </div></template
+      >
+    </el-card>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, computed, reactive, onBeforeUnmount } from 'vue'
-
+import { ArrowLeft, ArrowRight, DArrowLeft, DArrowRight } from '@element-plus/icons-vue'
 interface SelectedDate {
   num: number
   startTime: string
@@ -66,7 +85,10 @@ export default {
 
     // 当前月份的显示文本
     const currentMonth = computed(() => {
-      return currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' })
+      const year = currentDate.value.getFullYear().toString()
+      const month = (currentDate.value.getMonth() + 1).toString().padStart(2, '0') // 月份需要加1，补齐两位数字
+      const formattedDate = `${year}年  ${month}月`
+      return formattedDate
     })
 
     // 生成日期的二维数组
@@ -103,6 +125,20 @@ export default {
 
       return weeks
     })
+    // 切换到上一年
+    function prevYear() {
+      currentDate.value = new Date(
+        currentDate.value.getFullYear() - 1,
+        currentDate.value.getMonth()
+      )
+    }
+    //切换到下一年
+    function nextYear() {
+      currentDate.value = new Date(
+        currentDate.value.getFullYear() + 1,
+        currentDate.value.getMonth()
+      )
+    }
 
     // 切换到上一个月
     function prevMonth() {
@@ -218,6 +254,8 @@ export default {
       weeks,
       prevMonth,
       nextMonth,
+      prevYear,
+      nextYear,
       isDateSelected,
       isDateDisabled,
       selectDate,
@@ -230,7 +268,7 @@ export default {
 <style scoped>
 .my-date-picker {
   position: relative;
-  width: 210px;
+  width: 400px;
 }
 
 .my-date-picker-input {
@@ -278,8 +316,9 @@ export default {
 }
 
 .my-date-picker-selected {
-  background-color: #007bff;
+  background-color: #990099;
   color: #fff;
+  border-radius: 50%; /* 圆形高亮 */
 }
 
 .my-date-picker-disabled {
@@ -288,7 +327,48 @@ export default {
 }
 
 .my-date-picker-in {
-  background-color: #add8e6;
+  background-color: #999999;
+  border-radius: 50%; /* 圆形高亮 */
   color: #fff;
+}
+
+/* // */
+.days-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.days-tr {
+  flex-basis: 100%;
+  display: flex;
+}
+
+.days-td {
+  flex: 1; /* 等分父容器宽度 */
+  padding: 10px; /* 内边距 */
+  box-sizing: border-box; /* 防止内边距导致宽度变化 */
+  text-align: center;
+}
+
+.days-grid-tr {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 等分7份 */
+  gap: 10px; /* 格子间隔 */
+  padding: 10px; /* 内边距 */
+}
+
+.button {
+  border: none;
+  outline: none; /* 可选，去除点击按钮时产生的轮廓 */
+  font-size: 15px;
+}
+.time {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.text {
+  font-size: 20px;
 }
 </style>
