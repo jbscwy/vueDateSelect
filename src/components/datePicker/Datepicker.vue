@@ -238,8 +238,6 @@ export default {
   width: 100%;
   background-color: #fff;
   border: 1px solid #ccc;
-  border-top: none;
-  z-index: 999;
 }
 
 .my-date-picker-calendar {
